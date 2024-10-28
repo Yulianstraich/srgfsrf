@@ -1,0 +1,16 @@
+﻿$(document).ready(function () {
+    cierraSplash();
+    waitingDialogHide();
+});
+
+function cierraSplash() {
+    //console.log('entra');
+    //document.getElementById('dvSplash').style.display = 'none';
+    //$('#dvSplash').hide();
+    $('#dvSplash').fadeOut('1000', function () {
+        //            $(this).remove();
+        $('#dvSplash').css('display', 'none');
+        document.getElementById('dvSplash').style.display = 'none';
+        $('#dvSplash').hide();
+    });
+}

@@ -1,0 +1,22 @@
+﻿
+function waitingDialogShow(pMsj) {
+    // actualizamos el mensaje
+    $("#waitingDialog").find('h4').text(pMsj);
+    $("#waitingDialog").modal('show');
+    document.body.setAttribute("style", "");
+}
+
+function waitingDialogHide() {
+
+   setTimeout(function () {
+       //$("#waitingDialog").modal('toggle');
+        //$("#btnCloseWaiting .close").click();
+        //console.log('after click');
+       $("#waitingDialog").modal('hide');
+       $(".modal.in").modal('hide');
+       document.getElementById("btnCloseWaiting").click();
+       //$("#waitingDialog").removeClass('show');
+
+   }, 400);
+
+}

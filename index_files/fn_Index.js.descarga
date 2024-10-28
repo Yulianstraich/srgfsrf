@@ -1,0 +1,191 @@
+﻿$(document).ready(function () {
+
+    var lEmail = document.getElementById("txtEmail");
+    lEmail.setAttribute("pattern", "[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$");
+
+    $('.submitEmail').click(function () {
+        console.log('click');
+        event.preventDefault();
+        //console.log($('#frmEmail')[0].checkValidity());
+        if ($('#frmEmail')[0].checkValidity() === false) {
+            event.stopPropagation();
+        } else {
+            waitingDialogShow("Por Favor Espere Enviando Información...");
+
+            var lnombre = $("#txtNombre").val();
+            var lemail = $("#txtEmail").val();
+            var lmensaje = $("#txtMensaje").val();
+            var lasunto = $("#txtAsunto").val();
+            var ltelefono = $("#txtTelefono").val();
+            $("#msjError").html('');
+            //alert(datastring);
+            //EnvioEmail(string pNombre, string pEmail, string pAsunto, string pMensaje)
+            $.ajax({
+                url: "/Home/EnvioEmail",
+                type: "POST",
+                dataType: "json",
+                data: { pNombre: lnombre, pEmail: lemail, pAsunto: lasunto, pMensaje: lmensaje, pTelefono: ltelefono },
+                success: function (msg) {
+                    //alert("sucess:" + msg.success);
+                    if (msg.success) {
+                        waitingDialogHide();
+                        /*Swal.fire({
+                            title: "Accion Exitosa!",
+                            text: "Se Envio el Correo Correctamente!",
+                            icon: "success",
+                            timer: 1500
+                        });
+                        $('#myModal').modal('hide');*/
+                        $("#msjError").hide();
+                        $("#msjOk").show();
+                        setTimeout(function () { $("#msjOk").hide(); }, 8000);
+                        return true;
+                    } else {
+                        waitingDialogHide();
+                        $("#msjOk").hide();
+                        $("#msjError").show();
+                        $("#msjError").html(msg.mensaje);
+                        setTimeout(function () { $("#msjError").hide(); }, 8000);
+                        /*Swal.fire({
+                            title: "Accion Falida!",
+                            text: "No Se Envio el Correo Correctamente!",
+                            icon: "error",
+                            timer: 1500
+                        });*/
+                        return false;
+                    }
+                }
+            });
+            //waitingDialogHide();
+        }// is valida
+        $('#frmEmail').addClass('was-validated');
+
+    });
+
+    var topMenu = jQuery("#nav"),
+        offset = 40,
+        topMenuHeight = topMenu.outerHeight() + offset,
+        // All list items
+        menuItems = topMenu.find('a[href*="#"]'),
+        // Anchors corresponding to menu items
+        scrollItems = menuItems.map(function () {
+            var href = jQuery(this).attr("href"),
+                id = href.substring(href.indexOf('#')),
+                item = jQuery(id);
+            //console.log(item)
+            if (item.length) { return item; }
+        });
+
+    // so we can get a fancy scroll animation
+    menuItems.click(function (e) {
+        var href = jQuery(this).attr("href"),
+            id = href.substring(href.indexOf('#'));
+        offsetTop = href === "#" ? 0 : jQuery(id).offset().top - topMenuHeight + 1;
+        jQuery('html, body').stop().animate({
+            scrollTop: offsetTop
+        }, 300);
+        e.preventDefault();
+    });
+
+    // Bind to scroll
+    jQuery(window).scroll(function () {
+        // Get container scroll position
+        var fromTop = jQuery(this).scrollTop() + topMenuHeight;
+
+        // Get id of current scroll item
+        var cur = scrollItems.map(function () {
+            if (jQuery(this).offset().top < fromTop)
+                return this;
+        });
+
+        // Get the id of the current element
+        cur = cur[cur.length - 1];
+        var id = cur && cur.length ? cur[0].id : "";
+
+        menuItems.parent().removeClass("current-item");
+        if (id) {
+            menuItems.parent().end().filter("[href*='#" + id + "']").parent().addClass("current-item");
+        }
+
+    })
+
+    'use strict';
+
+
+    if ($.fn.classyNav) {
+        $('#uzaNav').classyNav();
+    }
+
+
+    // ***********************
+    // :: 11.0 WOW Active Code
+    // ***********************
+    if ($(window).width() > 767) {
+        new WOW().init();
+    }
+
+
+    // ****************************
+    // :: 13.0 Scrollup Active Code
+    // ****************************
+    if ($.fn.scrollUp) {
+        $(window).scrollUp({
+            scrollSpeed: 2000,
+            scrollText: '<i class="fa fa-angle-up"</i>'
+        });
+    }
+
+    // **************************
+    // :: 14.0 Sticky Active Code
+    // **************************
+    $(window).on('scroll', function () {
+        if ($(window).scrollTop() > 0) {
+            $('.main-header-area').addClass('sticky');
+        } else {
+            $('.main-header-area').removeClass('sticky');
+        }
+    });
+
+    // *********************************
+    // :: 16.0 Prevent Default 'a' Click
+    // *********************************
+    $('a[href="#"]').click(function ($) {
+        $.preventDefault();
+    });
+    /*
+    $(window).on('load', function () {
+        $('#dvSplash').fadeOut('1000', function () {
+            //            $(this).remove();
+            $('#dvSplash').css('display', 'none');
+            $('#dvSplash').hide();
+        });
+    });
+
+    $(window).bind("load", function () {
+        // Remove splash screen after load
+        $('#dvSplash').css('display', 'none');
+        $('#dvSplash').hide();
+        /*var x = document.getElementById("dvSplash");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }*/
+    //HideProgressMessagePopup();
+    /*});
+    window.onload = function () {
+        //document.getElementById('dvSplash').style.display = 'none';
+    };*/
+});
+
+function cierraSplash() {
+    //console.log('entra');
+    //document.getElementById('dvSplash').style.display = 'none';
+    //$('#dvSplash').hide();
+    $('#dvSplash').fadeOut('1000', function () {
+        //            $(this).remove();
+        $('#dvSplash').css('display', 'none');
+        document.getElementById('dvSplash').style.display = 'none';
+        $('#dvSplash').hide();
+    });
+}
